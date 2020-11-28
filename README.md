@@ -1,8 +1,8 @@
-# r7-proportion-div
+# Synchronized components
 
 ## Project setup
 ```
-npm install
+npm install 
 ```
 
 ### Compiles and hot-reloads for development
@@ -18,6 +18,12 @@ npm run build
 ### Lints and fixes files
 ```
 npm run lint
+```
+
+### Usage
+```
+npm i --save synched-components
+const { ProportionDiv, ImageDiv, Parallax, SmoothScroll } = require('synched-components').default
 ```
 
 ### Customize configuration
