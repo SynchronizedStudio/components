@@ -20,7 +20,7 @@ export default {
     }),
 
     props: {
-        debug: false,
+        debug: Boolean,
 
         elementId: null,
 
@@ -97,8 +97,6 @@ export default {
         },
 
         callback(entries)  {
-            let self = this
-
             let entry = entries[0]
             const currentY = entry.boundingClientRect.y
 

@@ -1,6 +1,6 @@
 {
   "name": "synched-components",
-  "version": "0.2.7",
+  "version": "0.3.0",
   "private": false,
   "main": "./dist/synchedComponents.common.js",
   "scripts": {
@@ -45,10 +45,6 @@
     "last 2 versions",
     "not dead"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SynchronizedStudio/components.git"
-  },
   "files": [
     "dist/*",
     "src/*",
