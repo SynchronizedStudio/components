@@ -82,7 +82,6 @@ export default {
     },
 
     methods: {
-
         resizeHandler(resizing){
             if(!resizing || this.visibleOneDirection){
                 return
@@ -103,12 +102,15 @@ export default {
             let op = this.scrollingEl.style.opacity
             op = op && op.length > 0 ? op * 1 : null
 
+            this.intersected = entry.isIntersecting
+
             if(!this.threshold || this.threshold[0] == 0 || currentY >= 0){
                 this.visible = _isNumber(op) ? entry.isIntersecting && (op != 0) : entry.isIntersecting
             }
 
-            if(this.scrollingDown && entry.isIntersecting){
+            if(entry.isIntersecting || (currentY <= 0)){
                 this.visibleOneDirection = true
+                return
             }
 
             if(!this.scrollingDown && !entry.isIntersecting && -currentY < this.pageHeight && op != 0){

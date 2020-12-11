@@ -1,6 +1,6 @@
 {
   "name": "@synchronized-studio/synchronized-components",
-  "version": "1.0.0",
+  "version": "2.1.7",
   "description": "Bundle of UI components",
   "author": "Synchronized Studio",
   "license": "MIT",
@@ -9,15 +9,17 @@
   },
   "homepage": "https://github.com/SynchronizedStudio/components#readme",
   "private": false,
-  "main": "./dist/synchedComponents.common.js",
+  "main": "./dist/synchronized-components.common.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name synchedComponents ./src/components/index.js"
+    "build-bundle": "vue-cli-service build --target lib --name synchronized-components ./src/index.js"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "extract-css-chunks-webpack-plugin": "^4.8.0",
+    "gsap": "^3.5.1",
     "imagesloaded": "^4.1.4",
     "lodash": "^4.17.20",
     "smooth-scrollbar": "^8.5.3",
@@ -52,10 +54,6 @@
     "last 2 versions",
     "not dead"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/SynchronizedStudio/components.git"
-  },
   "files": [
     "dist/*",
     "src/*",

@@ -1,7 +1,7 @@
 import imagesLoaded from 'imagesloaded';
 import _isNumber from 'lodash/isNumber'
 
-var Parallax = {
+const Parallax = {
 
     data: () => ({
         height: 0,

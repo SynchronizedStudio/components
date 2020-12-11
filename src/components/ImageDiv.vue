@@ -78,19 +78,25 @@ export default {
 
     computed: {
         isIE() {
-            const ua = window.navigator.userAgent;
+            return false
 
-            let crappyIE = false;
-            let msie = ua.indexOf('MSIE ');
-            if (msie > 0) { // IE 10 or older => return version number        
-                crappyIE = true;
-            }
-            let trident = ua.indexOf('Trident/');
-            if (trident > 0) { // IE 11 => return version number        
-                crappyIE = true;
+            if (!process.browser) {
+                return
             }
 
-            return crappyIE
+            // const ua = window.navigator.userAgent;
+
+            // let crappyIE = false;
+            // let msie = ua.indexOf('MSIE ');
+            // if (msie > 0) { // IE 10 or older => return version number        
+            //     crappyIE = true;
+            // }
+            // let trident = ua.indexOf('Trident/');
+            // if (trident > 0) { // IE 11 => return version number        
+            //     crappyIE = true;
+            // }
+
+            // return crappyIE
         },
 
         classes() {

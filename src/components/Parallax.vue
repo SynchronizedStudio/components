@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Parallax from './Parallax'
+import Parallax from '../mixins/Parallax'
 
 export default {
     name: 'parallax',
