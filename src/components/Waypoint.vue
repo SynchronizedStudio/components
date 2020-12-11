@@ -7,6 +7,7 @@
 
 <script>
 import _isNumber from 'lodash/isNumber'
+import _get from 'lodash/get'
 
 export default {
     name: 'waypoint',
@@ -18,6 +19,14 @@ export default {
         scrollingDown: true,
         pageHeight: 0
     }),
+
+    inject: ['scrollTop'],
+
+    computed: {
+        computedTop(){
+            return _get(this.scrollTop, 'currentScroll') || this.currentScroll
+        }
+    },  
 
     props: {
         debug: Boolean,
@@ -32,7 +41,7 @@ export default {
             default: () => null
         },
 
-        scrollTop: {
+        currentScroll: {
             default: 0
         }
     },
@@ -76,7 +85,7 @@ export default {
             })            
         },
 
-        scrollTop(val, oldVal){
+        computedTop(val, oldVal){
             this.scrollingDown = val > oldVal
         }
     },
@@ -105,15 +114,15 @@ export default {
             this.intersected = entry.isIntersecting
 
             if(!this.threshold || this.threshold[0] == 0 || currentY >= 0){
-                this.visible = _isNumber(op) ? entry.isIntersecting && (op != 0) : entry.isIntersecting
+                this.visible = _isNumber(op) ? this.intersected && (op != 0) : this.intersected
             }
 
-            if(entry.isIntersecting || (currentY <= 0)){
+            if(this.intersected || (currentY <= 0)){
                 this.visibleOneDirection = true
                 return
             }
 
-            if(!this.scrollingDown && !entry.isIntersecting && -currentY < this.pageHeight && op != 0){
+            if(!this.scrollingDown && !this.intersected && -currentY < this.pageHeight && op != 0){
                 this.visibleOneDirection = false   
             }
         }
