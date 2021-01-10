@@ -1,118 +1,59 @@
 <template>
-    <div class="image-div position-relative" 
-    :style="{paddingBottom: paddingBottom}">
-
-        <div 
-        v-if='isIE'
-        class="img h-100 w-100 no-repeat position-absolute t-0 l-0"
-        :class="classes"
-        :style="{ backgroundImage: `url('${src}')` }">
-        </div>
-
-        <img 
-        v-else
-        :alt='alt' 
+    <div class="image-div overflow-hidden" 
+    :class="{
+        'position-absolute w-100 h-100 t-0 l-0' : absolute, 
+        'position-relative': !absolute
+    }"
+    :style="{paddingBottom}">
+        <img
+        draggable='false'
+        :alt='computedAlt' 
         :src='src' 
+        :class="[innerClasses, classes]"
         loading="lazy"
-        class='w-100 h-100 cover position-absolute t-0 l-0' />
-
+        class='w-100 h-100 position-absolute t-0 l-0' />
         <slot></slot>
-
     </div>
 </template>
 <script>
+import _get from 'lodash/get'
+import { mapState, mapActions } from 'vuex'
 
 export default {
     name: "image-div",
-
-    data: () => ({
-        naturalWidth: null,
-        naturalHeight: null,
-        ratio: 0
-    }),
-
     props: {
-        src: null,
-        contain: null,
-        keepProportion: null,
-        proportion: null,
-        bgTop: null,
-        bgBottom: null,
-        alt: null
+        innerClasses: false,
+        src: false,
+        contain: false,
+        proportion: false,
+        alt: false,
+        absolute: false,
+        image: false
     },
-
-    watch: {
-        proportion(p) {
-            this.ratio = p
-        }
-    },
-
-    created(){
-        if(this.proportion){
-            this.ratio = this.proportion
-            return
-        }
-    },
-
-    mounted() {
-        let self = this;
-
-        if (!this.keepProportion || this.proportion) {
-            return;
-        }
-
-        var image = new Image();
-
-        image.addEventListener(
-            "load",
-            () => {
-                self.naturalHeight = image.naturalHeight;
-                self.naturalWidth = image.naturalWidth;
-                self.ratio = self.naturalHeight / self.naturalWidth;
-            },
-            false
-        );
-
-        image.src = this.image;
-    },
-
     computed: {
-        isIE() {
-            return false
+        ...mapState('app', [
+          'siteName'
+        ]),
 
-            if (!process.browser) {
-                return
-            }
-
-            // const ua = window.navigator.userAgent;
-
-            // let crappyIE = false;
-            // let msie = ua.indexOf('MSIE ');
-            // if (msie > 0) { // IE 10 or older => return version number        
-            //     crappyIE = true;
-            // }
-            // let trident = ua.indexOf('Trident/');
-            // if (trident > 0) { // IE 11 => return version number        
-            //     crappyIE = true;
-            // }
-
-            // return crappyIE
+        computedAlt() {
+            return this.alt || this.siteName
         },
 
         classes() {
             return {
                 'cover' : !this.contain,
                 'contain' : this.contain,
-                 'bg-top' : this.bgTop,
-                 'bg-center' : !this.bgTop,
-                 'bg-bottom' : this.bgBottom
+                'bg-center': true
              }
         },
-
         paddingBottom() {
             return this.ratio ? this.ratio * 100 + "%" : null
+        },
+
+        ratio() {
+            let imageSize = _get(this.image, 'fields.file.details.image')
+            return this.proportion || (imageSize ? imageSize.height / imageSize.width : 0)
         }
     }
 };
-
 </script>
