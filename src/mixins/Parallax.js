@@ -11,38 +11,72 @@ const Parallax = {
         topBound: 0
     }),
 
-    props: [
-        'speedFactor',
-        'scaleFactor',
-        'wrapped',
-        'absolute',
-        'offset',
-        'className',
-        'global',
-        'topOffset',
-        'horizontal',
-        'debug',
-        'scrollTop'
-    ],
+    props: {
+        speedFactor: {
+            type: Number,
+            default: 0
+        },
+        scaleFactor: false,
+        wrapped: {
+            type: Boolean,
+            default: false
+        },
+        absolute: {
+            type: Boolean,
+            default: false
+        },
+        offset: false,
+        className: {
+            type: String
+        },
+        global: {
+            type: Boolean,
+            default: true
+        },
+        topOffset: false,
+        horizontal: {
+            type: Boolean,
+            default: false
+        },
+        debug: {
+            type: Boolean,
+            default: false
+        },
+        startOffset: {
+            type: Number,
+            default: 0
+        }
+    },
+
+    watch: {
+        pageWidth(){
+            this.resizeHandler()
+        }
+    },
 
     mounted()  {
         this.resizeHandler()
         imagesLoaded(this.$el, this.$nextTick(this.resizeHandler))
-        window.addEventListener('resize', this.resizeHandler)
+
+        if(this.$device.isMobile){
+            this.$bus.$on('resize', this.mobileResizeHandler)
+        } else{
+            this.$bus.$on('resize', this.resizeHandler)
+        }
     },
 
     destroyed()  {
-        window.removeEventListener('resize', this.resizeHandler)
+        this.$bus.$off('resize', this.resizeHandler)
     },
 
     computed: {
 
         noScale() {
-            return (this.pageHeight == this.height) && this.speedFactor > 0
+            return (this.pageHeight == this.height) && this.speedFactor > 0 && !this.$device.isMobile
         },
 
         noOffseting() {
-            return this.topBound == 0 && !this.isMobile
+            return this.topBound == 0 && !this.$device.isMobile
         },
 
         classObject()  {
@@ -63,8 +97,10 @@ const Parallax = {
         start() {
             let bound = this.topOffset || this.topBound
 
-            return _isNumber(this.offset) || bound === 0 ? 0 
+            let start = _isNumber(this.offset) || bound === 0 ? 0 
             : bound - this.pageHeight
+
+            return start + this.startOffset
         },
 
         end() {
@@ -88,6 +124,10 @@ const Parallax = {
     },
 
     methods: {
+        mobileResizeHandler() {
+            this.pageWidth = window.innerWidth
+        },  
+
         getSize(ignore)  {
             if (!this.wrapped || ignore) {
                 return

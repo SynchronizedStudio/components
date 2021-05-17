@@ -1,6 +1,6 @@
 <template>
 <div ref="waypoint"
-     class="waypoint">
+     class="synchronized-waypoint">
    <slot></slot>
 </div>
 </template>
@@ -20,11 +20,11 @@ export default {
         pageHeight: 0
     }),
 
-    inject: ['scrollTop'],
+    inject: ['scrollingProps'],
 
     computed: {
         computedTop(){
-            return _get(this.scrollTop, 'currentScroll') || this.currentScroll
+            return _isNumber(this.currentScroll) ? this.currentScroll : _get(this.scrollingProps, 'currentScroll')
         }
     },  
 
@@ -33,16 +33,14 @@ export default {
 
         elementId: null,
 
-        startOffset: {
-            default: 0
-        },
+        rootMargin: Number,
 
-        threshold: {
+        opts: {
             default: () => null
         },
 
         currentScroll: {
-            default: 0
+            default: false
         }
     },
 
@@ -61,12 +59,11 @@ export default {
             !('intersectionRatio' in window.IntersectionObserverEntry.prototype)) {
             this.visibleOneDirection = this.visible = true
         } else{           
+            this.observer = new IntersectionObserver(this.callback, this.opts)
 
-            this.observer = new IntersectionObserver(this.callback , {
-                threshold: this.threshold
+            setTimeout(() => {
+                this.observer.observe(this.$el)
             })
-
-            this.observer.observe(this.$el)
         }
     }, 
 
@@ -121,6 +118,13 @@ export default {
                 this.visibleOneDirection = true
                 return
             }
+
+
+            // OVO ISPITAJ DA ZAMENI OVO DOLE LUDILO
+            // if(!this.intersected && currentY <= 0){
+            //     this.visibleOneDirection = false
+            //     return
+            // }
 
             if(!this.scrollingDown && !this.intersected && -currentY < this.pageHeight && op != 0){
                 this.visibleOneDirection = false   

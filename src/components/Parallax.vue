@@ -19,6 +19,13 @@ export default {
 
     mixins: [Parallax],
 
+    props: {
+        scrollTop: {
+            type: Number,
+            default: 0
+        }
+    },
+
     computed: {
 
         elStyle() {

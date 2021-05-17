@@ -1,7 +1,6 @@
 import { gsap } from 'gsap';
 import _each from 'lodash/each'
 import _get from 'lodash/get'
-import _isNaN from 'lodash/isNaN'
 import _isNumber from 'lodash/isNumber'
 import _has from 'lodash/has'
 import _merge from 'lodash/merge'
@@ -43,12 +42,12 @@ const Animations = {
                 dur: 1.6,
                 ease: 'Power2.easeOut'
             },
-            // clipPath: {
-            //     from: 'polygon(30% 10%, 70% 10%, 70% 90%, 30% 90%)',
-            //     to: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-            //     ease: 'Power4.easeInOut',
-            //     dur: 2
-            // },
+            clipPath: {
+                from: 'polygon(30% 10%, 70% 10%, 70% 90%, 30% 90%)',
+                to: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+                ease: 'Power4.easeInOut',
+                dur: 2
+            }
         },
 
         presets: {
@@ -122,21 +121,11 @@ const Animations = {
 
             let from, to
 
-            if(prop == 'clipPath'){
+            let dataFrom = obj['from' + prop]
+            let dataTo = obj['to' + prop]
 
-                let dataFrom = obj['from' + prop]
-                let dataTo = obj['to' + prop]
-
-                from = dataFrom || _get(defaultValues, 'from')
-                to = dataTo || _get(defaultValues, 'to')
-
-            } else{                
-                let dataFrom = obj['from' + prop] * 1
-                let dataTo = obj['to' + prop] * 1
-
-                from = _isNumber(dataFrom) && !_isNaN(dataFrom) ? dataFrom : _get(defaultValues, 'from')
-                to = _isNumber(dataTo) && !_isNaN(dataTo) ? dataTo : _get(defaultValues, 'to')
-            }
+            from = dataFrom || _isNumber(dataFrom) ? dataFrom : _get(defaultValues, 'from')
+            to = dataTo || _isNumber(dataTo) ? dataTo : _get(defaultValues, 'to')
 
 
             // its depening on the animation direction
@@ -151,18 +140,20 @@ const Animations = {
             }
         },
 
-        runAnimation(elems, visible, notInstant) {
+        runAnimation({ elems, visible, notInstant, extraDelay, onComplete }) {
 
             if(!elems || !elems.length){
                 return
             }
+
+            let tl = gsap.timeline({onComplete})
 
             gsap.set(elems, {
                 opacity: 1
             })
 
             if(visible){                    
-                gsap.set(elems, {
+                tl.set(elems, {
                     willChange: 'transform, opacity'
                 })
             }
@@ -209,24 +200,31 @@ const Animations = {
                     endVars[prop] = aniObject.to
                 })
 
-                endVars.delay = delay
+                endVars.delay = delay || 0
 
                 endVars.ease = ease || this.defaultEase
                 endVars.overwrite = true
-                
+
+
                 startVars.transformOrigin = elem.dataset.origin || 'center center'
 
                 if(!animationValues.notDelayed){
                     endVars.delay += this.animationDelay || 0
+
+                    if(extraDelay){
+                        endVars.delay += extraDelay
+                    }
                 }
 
                 if(visible && !animationValues.keepProps){
                     endVars.clearProps = "transform,clipPath,transform-origin,will-change"
                 }
 
-                gsap.fromTo(elem, dur, startVars, endVars)
+                tl.fromTo(elem, dur, startVars, endVars, 0)
                 
             })
+
+            return tl
         }
     }
 }

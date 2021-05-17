@@ -8,8 +8,8 @@
 <script>
 // import Vue from 'vue'
 import _merge from 'lodash/merge'
-// import _isNumber from 'lodash/isNumber'
-// import smoothscroll from 'smoothscroll-polyfill';
+import _isNumber from 'lodash/isNumber'
+import smoothscroll from 'smoothscroll-polyfill';
 import Scrollbar from 'smooth-scrollbar';
 
 class EdgeEasingPlugin extends Scrollbar.ScrollbarPlugin {
@@ -72,7 +72,9 @@ export default {
 
         'startTop',
 
-        'isMobile'
+        'isMobile',
+
+        'scrollTop'
     ],
 
     computed: {
@@ -89,14 +91,18 @@ export default {
 
         window.removeEventListener('scroll', this.onScroll)
 
-        // this.$bus.$off('scrollTo')
-        // this.$bus.$off('updateScrollbar')
-        // this.$bus.$off('enableScrollbar', this.enable)
-        // this.$bus.$off('disableScrollbar', this.disable)
+        window.removeEventListener('keydown', this.onKeyDown)
+        window.removeEventListener('scroll', this.onScroll)
+
+        this.$bus.$off('scrollTo')
+        this.$bus.$off('updateScrollbar')
+        this.$bus.$off('enableScrollbar', this.enable)
+        this.$bus.$off('disableScrollbar', this.disable)
     },
 
     mounted()  {
-        // smoothscroll.polyfill();
+        smoothscroll.polyfill();
+        window.addEventListener('keydown', this.onKeyDown)
         this.initSmooth(this.$el)
     },
 
@@ -111,6 +117,25 @@ export default {
     },
 
     methods: {
+
+        onKeyDown(e)  {
+            if(this.disabled){
+                return
+            }
+
+            //up
+            if(e.shiftKey && e.keyCode == 32){
+                this.$bus.$emit('scrollTo', this.scrollTop - 300)
+            } else if (e.keyCode === 38) {
+                this.$bus.$emit('scrollTo', this.scrollTop - 88)
+            }
+            // down
+            else if(e.keyCode == 32){
+                this.$bus.$emit('scrollTo', this.scrollTop + 300)
+            } else if(e.keyCode === 40){
+                this.$bus.$emit('scrollTo', this.scrollTop + 88)
+            }
+        },
 
         onScroll()  {
             this.$emit('update:scrollTop', window.scrollY)
@@ -149,11 +174,11 @@ export default {
             window.removeEventListener('scroll', this.onScroll)
             window.addEventListener('scroll', this.onScroll)
 
-            this.$bus.$on('scrollTo', (scrollTop) => {
+            this.$bus.$on('scrollTo', (scrollTop, immediate) => {
 
                 window.scrollTo({
                     top: scrollTop,
-                    behavior: 'smooth'
+                    behavior: immediate ? 'auto' : 'smooth'
                 })
 
                this.$emit('update:scrollTop', scrollTop)
@@ -188,30 +213,33 @@ export default {
             this[this.disabled ? 'disable' : 'enable']()
 
             this.scrollbar.addListener(this.onSmoothScroll)
-            // this.$bus.$on('updateScrollbar', this.scrollbar.update)
+            this.$bus.$on('updateScrollbar', this.scrollbar.update)
 
             if (this.preventEvents) {
                 return
             }
 
-            // this.$bus.$on('enableScrollbar', this.enable)
-            // this.$bus.$on('disableScrollbar', this.disable)
+            this.$bus.$on('enableScrollbar', this.enable)
+            this.$bus.$on('disableScrollbar', this.disable)
 
 
-            // this.$bus.$on('scrollTo', (scrollTop, dur) => {
-            //     if(this.isMobile){
-            //         window.scrollTo(0, 0)
-            //         return
-            //     }
+            this.$bus.$on('scrollTo', (scrollTop, dur, onComplete) => {
+                if(this.isMobile){
+                    window.scrollTo(0, scrollTop)
+                    return
+                }
 
-            //     let duration = _isNumber(dur) ? dur : 600
-            //     this.scrollbar.scrollTo(0, scrollTop, duration)
+                let duration = _isNumber(dur) ? dur : 600
+                this.scrollbar.scrollTo(0, scrollTop, duration, { 
+                    callback: () => {
+                        onComplete && onComplete()
+                    } 
+                })
 
-            //     this.$emit('update:scrollTop', scrollTop)
-            //     // this.setStateApp({
-            //     //     scrollTop
-            //     // })
-            // })
+                if(duration == 0){
+                    this.$emit('update:scrollTop', scrollTop)
+                }
+            })
 
         }
     }

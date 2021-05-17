@@ -37,7 +37,10 @@
         </parallax>
       </ProportionDiv>
 
-      <image-div src="/favicon.ico" :proportion='.3' />
+      <image-div 
+      :contain='true' 
+      src="/favicon.ico" 
+      :proportion='.3' />
 
     </smooth-scroll>
 
