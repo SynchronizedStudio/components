@@ -55,6 +55,7 @@ export default {
             damping: 0.1,
             renderByPixels: true,
             alwaysShowTracks: false,
+            keyDownDisabled: false
         }
     }),
 
@@ -98,6 +99,9 @@ export default {
         this.$bus.$off('updateScrollbar')
         this.$bus.$off('enableScrollbar', this.enable)
         this.$bus.$off('disableScrollbar', this.disable)
+
+        this.$bus.$off('enableKeydown', this.enableKeyDown)
+        this.$bus.$off('disableKeydown', this.disableKeyDown)
     },
 
     mounted()  {
@@ -119,7 +123,7 @@ export default {
     methods: {
 
         onKeyDown(e)  {
-            if(this.disabled){
+            if(this.disabled || this.keyDownDisabled){
                 return
             }
 
@@ -139,6 +143,14 @@ export default {
 
         onScroll()  {
             this.$emit('update:scrollTop', window.scrollY)
+        },
+
+        enableKeyDown() {
+            this.keyDownDisabled = false
+        },
+
+        disableKeyDown(){
+            this.keyDownDisabled = true
         },
 
         enable() {
@@ -222,13 +234,11 @@ export default {
             this.$bus.$on('enableScrollbar', this.enable)
             this.$bus.$on('disableScrollbar', this.disable)
 
+            this.$bus.$on('enableKeydown', this.enableKeyDown)
+            this.$bus.$on('disableKeydown', this.disableKeyDown)
+
 
             this.$bus.$on('scrollTo', (scrollTop, dur, onComplete) => {
-                if(this.isMobile){
-                    window.scrollTo(0, scrollTop)
-                    return
-                }
-
                 let duration = _isNumber(dur) ? dur : 600
                 this.scrollbar.scrollTo(0, scrollTop, duration, { 
                     callback: () => {

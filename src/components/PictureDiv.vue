@@ -1,17 +1,26 @@
 <template>
-    <figure class="synchronized-image-div overflow-hidden" 
+    <figure class="synchronized-picture-div overflow-hidden" 
     :class="{
         'position-absolute w-100 h-100 t-0 l-0' : fill
     }"
     :style="{paddingBottom}">
-        <img
-        draggable='false'
-        :alt='computedAlt' 
-        :src='src' 
-        :style='cssVars'
-        :class="[innerClasses, classes]"
-        loading="lazy"
-        class='w-100 h-100 position-absolute t-0 l-0 img' />
+        <picture 
+        :style='cssVars'>
+          
+          <source 
+          v-for='(img, index) in sources'
+          :key='index'
+          :media="`(min-width:${img.width}px)`" 
+          :srcset="`${img.src} 1x, ${img.srcx2 || img.src} 2x`">
+
+          <img 
+          :class="[innerClasses, classes]"
+          class='w-100 h-100 position-absolute t-0 l-0 picture'
+          :src="src" 
+          :alt="alt" 
+          style="width:auto;">
+        </picture>
+
         <slot></slot>
     </figure>
 </template>
@@ -28,8 +37,12 @@ export default {
         },
 
         src: {
-            type: String,
-            default: ''
+            type: String
+        },
+
+        sources: {
+            type: Array,
+            default: () => {}
         },
 
         contain: {
@@ -72,6 +85,10 @@ export default {
         }
     },
 
+    mounted() {
+        console.log("SSS", this.sources)
+    },
+
     computed: {
 
         cssVars() {
@@ -111,11 +128,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.synchronized-image-div{
+.synchronized-picture-div{
     position: relative;
 }
 
-.img{
+.picture{
     object-position: var(--align-mobile);
 
     @media only screen and (min-width: 768px) {

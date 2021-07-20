@@ -1,7 +1,12 @@
 <template>
 <div ref="holder"
      class='parallax-wrapper'
-     :class="[className, { 'wrapped': wrapped, 'not-wrapped': !wrapped, 'position-absolute': absolute }]">
+     :class="[className, { 
+        'wrapped': wrapped, 
+        'not-wrapped': !wrapped, 
+        'position-absolute': absolute,
+        'active-on-mobile': activeOnMobile
+    }]">
     <div ref="parallax"
          class="parallax"
          v-bind:style="elStyle">
@@ -23,7 +28,9 @@ export default {
         scrollTop: {
             type: Number,
             default: 0
-        }
+        },
+
+        activeOnMobile: Boolean
     },
 
     computed: {
@@ -80,5 +87,9 @@ export default {
     will-change: transform;
     height: 100%;
     backface-visibility: hidden; 
+
+    /*&.not-wrapped:not(.active-on-mobile) {
+        transform: none!important;
+    }*/
 }
 </style>

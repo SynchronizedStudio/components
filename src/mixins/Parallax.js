@@ -60,13 +60,19 @@ const Parallax = {
 
         if(this.$device.isMobile){
             this.$bus.$on('resize', this.mobileResizeHandler)
+            this.$bus.$on('resizeParallax', this.mobileResizeHandler)
         } else{
+            this.$bus.$on('resizeParallax', this.resizeHandler)
             this.$bus.$on('resize', this.resizeHandler)
         }
     },
 
     destroyed()  {
         this.$bus.$off('resize', this.resizeHandler)
+        this.$bus.$off('resizeParallax', this.resizeHandler)
+
+        this.$bus.$off('resize', this.mobileResizeHandler)
+        this.$bus.$off('resizeParallax', this.mobileResizeHandler)
     },
 
     computed: {

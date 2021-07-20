@@ -1,6 +1,7 @@
 // COMPONENTS
 import ProportionDiv from './components/ProportionDiv.vue';
 import ImageDiv from './components/ImageDiv.vue';
+import PictureDiv from './components/PictureDiv.vue';
 import Parallax from './components/Parallax.vue';
 import Waypoint from './components/Waypoint.vue';
 import SmoothScroll from './components/SmoothScroll.vue';
@@ -20,6 +21,7 @@ export {
 const Components = {
   ProportionDiv,
   ImageDiv,
+  PictureDiv,
   Parallax,
   Waypoint,
   SmoothScroll
