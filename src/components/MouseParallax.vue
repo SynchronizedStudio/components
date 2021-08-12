@@ -1,5 +1,5 @@
 <template>
-<div class='outer-wrapper t-0'
+<div class='mouse-parallax-outer-wrapper t-0'
 :class='{"w-100 h-100 perspective" : !notWrapped}'>
     <div ref="mouse-parallax"
          class="mouse-parallax w-100 h-100 position-relative"
@@ -15,10 +15,12 @@
 <script>
 import { gsap } from 'gsap'
 import _clamp from 'lodash/clamp'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
     name: 'mouseParallax',
+
+    inject: ['scrollingProps'],
 
     data: () => ({
         totalWidth: null,
@@ -35,11 +37,11 @@ export default {
         this.$nextTick(this.resizeHandler)
 
         this.$watch(
-            vm => [
+            () => [
                 this.width,
                 this.height
             ].join(),
-            val => {
+            () => {
                 this.resizeHandler()
             }
         )
@@ -59,13 +61,13 @@ export default {
 
     watch: {
         position: {
-            handler: function(pos, old) {
+            handler: function() {
                 this.animate()
             },
             deep: true
         },
         pageSize: {
-            handler: function(pos, old) {
+            handler: function() {
                 this.resizeHandler()
             },
             deep: true
@@ -77,9 +79,12 @@ export default {
         ...mapState('app', [
           'width',
           'height',
-          'mouse',
-          'scrollTop'
+          'mouse'
         ]),
+
+        scrollTop() {
+            return this.scrollingProps.currentScroll
+        },
 
         elStyle() {
             return {
@@ -171,8 +176,6 @@ export default {
                 return
             }
 
-            console.log("CURR", this.currentX)
-
             this.mouseParallaxTween = gsap.to(this, this.dur || 1.5, {
                 newPageX: this.position.x,
                 newPageY: this.position.y,
@@ -203,26 +206,27 @@ export default {
 
 </script>
 
-<style lang="scss" scoped="">
-.outer-wrapper{
+<style lang="scss">
+.mouse-parallax-outer-wrapper{
     position: relative;
 
     // &.perspective {
     //     perspective: 1000px;
     // }
-}
 
-.inner-wrapper{
-    width: 100%;
-    height: 100%;
-}
+    .inner-wrapper{
+        width: 100%;
+        height: 100%;
+    }
 
-.mouse-parallax {
-    will-change: transform;
-    transform-style: preserve-3d;
+    .mouse-parallax {
+        will-change: transform;
+        transform-style: preserve-3d;
 
-    @include media-breakpoint-down(md) {
-        transform: none!important;
+        // @include media-breakpoint-down(md) {
+        //     transform: none!important;
+        // }
     }
 }
+
 </style>

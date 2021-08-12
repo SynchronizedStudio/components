@@ -6,7 +6,6 @@
 </template>
 
 <script>
-// import Vue from 'vue'
 import _merge from 'lodash/merge'
 import _isNumber from 'lodash/isNumber'
 import smoothscroll from 'smoothscroll-polyfill';
@@ -131,13 +130,13 @@ export default {
             if(e.shiftKey && e.keyCode == 32){
                 this.$bus.$emit('scrollTo', this.scrollTop - 300)
             } else if (e.keyCode === 38) {
-                this.$bus.$emit('scrollTo', this.scrollTop - 88)
+                this.$bus.$emit('scrollTo', this.scrollTop - 150)
             }
             // down
             else if(e.keyCode == 32){
                 this.$bus.$emit('scrollTo', this.scrollTop + 300)
             } else if(e.keyCode === 40){
-                this.$bus.$emit('scrollTo', this.scrollTop + 88)
+                this.$bus.$emit('scrollTo', this.scrollTop + 150)
             }
         },
 
@@ -225,7 +224,10 @@ export default {
             this[this.disabled ? 'disable' : 'enable']()
 
             this.scrollbar.addListener(this.onSmoothScroll)
-            this.$bus.$on('updateScrollbar', this.scrollbar.update)
+            
+            this.$bus.$on('updateScrollbar', () => {
+                this.scrollbar && this.scrollbar.update()
+            })
 
             if (this.preventEvents) {
                 return

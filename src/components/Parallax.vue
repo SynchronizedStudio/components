@@ -24,16 +24,22 @@ export default {
 
     mixins: [Parallax],
 
+    inject: ['scrollingProps'],
+
     props: {
-        scrollTop: {
-            type: Number,
-            default: 0
-        },
+        // scrollTop: {
+        //     type: Number,
+        //     default: 0
+        // },
 
         activeOnMobile: Boolean
     },
 
     computed: {
+
+        scrollTop() {
+            return this.scrollingProps.currentScroll
+        },
 
         elStyle() {
 
@@ -70,7 +76,7 @@ export default {
 
 </script>
 
-<style scoped="">
+<style>
 .parallax-wrapper {
     height: 100%;
     width: 100%;

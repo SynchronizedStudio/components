@@ -157,7 +157,8 @@ const Parallax = {
                 return this.offset
             }
 
-            let off = m > 0 ? 0
+            let off = !this.wrapped ? m / 2
+                : m > 0 ? 0
                 : this.noOffseting ? 0
                 : this.topBound == 0 && !this.horizontal ? 0
                 : this.wrapped && this.noScale ? m / 2
@@ -176,7 +177,7 @@ const Parallax = {
             return percentage
         },
 
-        resizeHandler()  {
+        parallaxResizeHandler(){
             if (!this.$el) {
                 return
             }
@@ -186,6 +187,10 @@ const Parallax = {
             this.bounds = this.$el.getBoundingClientRect()
             this.topBound = this.bounds.top + this.scrollTop
             this.height = this.$el.offsetHeight
+        },
+
+        resizeHandler()  {
+            this.parallaxResizeHandler()
         }
     }
 

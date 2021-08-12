@@ -1,8 +1,7 @@
 import { gsap } from 'gsap'
-import _get from 'lodash/get'
 import _clamp from 'lodash/clamp'
 import _extend from 'lodash/extend'
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 
 var MouseParallax = {
     // inject: ['scrollTop'],
@@ -18,7 +17,7 @@ var MouseParallax = {
 
     watch: {
       position: {
-          handler: function(pos, old) {
+          handler: function() {
               this.animate()
           },
           deep: true
@@ -35,11 +34,11 @@ var MouseParallax = {
         }, 100)
 
         this.$watch(
-            vm => [
+            () => [
                 this.width,
                 this.height
             ].join(),
-            val => {
+            () => {
                 this.resizeHandler()
             }
         )

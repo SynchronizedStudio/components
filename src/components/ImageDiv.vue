@@ -110,7 +110,7 @@ export default {
 };
 </script>
 
-<style lang='scss' scoped>
+<style lang='scss'>
 .synchronized-image-div{
     position: relative;
 }
