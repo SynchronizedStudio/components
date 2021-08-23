@@ -17,7 +17,7 @@
           :class="[innerClasses, classes]"
           class='w-100 h-100 position-absolute t-0 l-0 picture'
           :src="src" 
-          :alt="alt" 
+          :alt="computedAlt" 
           style="width:auto;">
         </picture>
 

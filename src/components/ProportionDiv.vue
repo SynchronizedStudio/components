@@ -1,6 +1,13 @@
 <template>
-    <div class="proportion-div position-relative" :style="{paddingBottom: paddingBottom}">
-        <div class='position-absolute w-100 h-100 t-0 l-0' :class='innerClasses'>
+    <div class="proportion-div position-relative" 
+    :style="{
+        paddingBottom: paddingBottom
+    }">
+        <div
+        class='w-100 h-100 t-0 l-0' 
+        :class='[innerClasses, {
+            "position-absolute": proportion
+        }]'>
             <slot></slot>
         </div>
     </div>
