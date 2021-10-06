@@ -37,6 +37,15 @@
         </parallax>
       </ProportionDiv>
 
+      
+       <!-- HEADLINE -->
+      <text-fill
+      tag="h1"
+      :text="model.fields.headline"
+      innerClasses="expanded-bold text-uppercase color-olive headline mb-5 mb-md-0"
+      data-not-instant='true' />
+      <!-- END :: HEADLINE -->      
+
       <image-div 
       :contain='true' 
       src="/favicon.ico" 

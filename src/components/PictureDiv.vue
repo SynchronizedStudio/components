@@ -84,11 +84,7 @@ export default {
             default: 768
         }
     },
-
-    mounted() {
-        console.log("SSS", this.sources)
-    },
-
+    
     computed: {
 
         cssVars() {

@@ -1,8 +1,10 @@
 <template>
-<div ref="waypoint"
-     class="synchronized-waypoint">
+<component 
+:is='tag'
+ref="waypoint"
+class="synchronized-waypoint">
    <slot></slot>
-</div>
+</component>
 </template>
 
 <script>
@@ -41,6 +43,11 @@ export default {
 
         currentScroll: {
             default: false
+        },
+
+        tag: {
+            default: 'div',
+            type: String
         }
     },
 

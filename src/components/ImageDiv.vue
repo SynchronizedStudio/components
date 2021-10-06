@@ -38,7 +38,7 @@ export default {
         },
 
         proportion: {
-            type: Number
+            type: [Number, Boolean]
         },
 
         alt: {
